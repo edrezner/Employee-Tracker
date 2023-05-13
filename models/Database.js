@@ -1,3 +1,6 @@
+const mysql = require("mysql2");
+const express = require("express");
+
 class Database {
   constructor(config) {
     this.connection = mysql.createConnection(config);

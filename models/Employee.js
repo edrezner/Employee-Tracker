@@ -6,9 +6,18 @@ class Employee {
     this.managerId = managerId;
   }
 
+  viewAllEmployees() {
+    const query = "SELECT * FROM employee";
+    db.connection.query(query, (err, results) => {
+      if (err) throw err;
+      console.log("All employees:");
+      console.log(results);
+    });
+  }
+
   save() {
     const query =
-      "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+      "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
     db.connection.query(
       query,
       [this.firstName, this.lastName, this.roleId, this.managerId],
@@ -22,7 +31,7 @@ class Employee {
   }
 
   updateRole(newRoleId) {
-    const query = "UPDATE employees SET role_id = ? WHERE employee_id = ?";
+    const query = "UPDATE employee SET role_id = ? WHERE employee_id = ?";
     db.connection.query(query, [newRoleId, this.employeeId], (err, result) => {
       if (err) throw err;
       console.log(
