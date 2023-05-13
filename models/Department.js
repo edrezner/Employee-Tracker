@@ -1,22 +1,28 @@
+const cTable = require("console.table");
+
 class Department {
-  constructor(name) {
-    this.name = name;
+  constructor(db) {
+    this.db = db;
   }
 
-  viewAllDepartments() {
+  viewAllDepartments(callback) {
     const query = "SELECT * FROM department";
-    db.connection.query(query, (err, results) => {
+    this.db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All departments:");
-      console.log(results);
+      console.table(results);
+      //   this.db.connection.end();
+      callback(this.db);
     });
   }
 
-  save() {
-    const query = "INSERT INTO departments (name) VALUES (?)";
-    db.connection.query(query, [this.name], (err, result) => {
+  save(name, callback) {
+    // var name = departmentName; var callback = start;
+    const query = "INSERT INTO department (name) VALUES (?)";
+    this.db.connection.query(query, [name], (err, result) => {
       if (err) throw err;
-      console.log(`Department ${this.name} saved to the database.`);
+      console.log(`Department ${name} saved to the database.`);
+      callback(this.db);
     });
   }
 }
