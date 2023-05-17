@@ -49,6 +49,32 @@ function start(db) {
             department.save(departmentName, start);
           });
       } else if (selection === "Add a role") {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "role",
+              message: "Enter the name of the role:",
+            },
+            {
+              type: "input",
+              name: "salary",
+              message: "Enter the salary amount for the role:",
+            },
+            {
+              type: "input",
+              name: "departmentName",
+              message:
+                "Enter the name of the department the role is a part of:",
+            },
+          ])
+          .then((data) => {
+            const roleName = data.role;
+            const salary = data.salary;
+            const departmentName = data.departmentName;
+            const role = new Role(roleName, salary, departmentName, db);
+            role.save(role, start);
+          });
       } else if (selection === "Add an employee") {
       } else if (selection === "Update an employee role") {
         // User selects update employee role; shown list of employee names (first + last); show all possible titles from role table;

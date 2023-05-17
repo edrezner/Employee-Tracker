@@ -1,28 +1,30 @@
+const cTable = require("console.table");
+
 class Role {
-  constructor(name, salary, departmentId) {
-    this.name = name;
-    this.salary = salary;
-    this.departmentId = departmentId;
+  constructor(db) {
+    this.db = db;
   }
 
-  viewAllRoles() {
+  async viewAllRoles(callback) {
     const query = "SELECT * FROM role";
     db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All roles:");
-      console.log(results);
+      console.table(results);
+      callback(this.db);
+      return results;
     });
   }
 
-  save() {
+  async save() {
     const query =
-      "INSERT INTO roles (name, salary, department_id) VALUES (?, ?, ?)";
-    db.connection.query(
+      "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+    this.db.connection.query(
       query,
-      [this.name, this.salary, this.departmentId],
+      [title, salary, departmentId],
       (err, result) => {
         if (err) throw err;
-        console.log(`Role ${this.name} saved to the database.`);
+        console.log(`Role ${title} saved to the database.`);
       }
     );
   }

@@ -13,6 +13,7 @@ class Department {
       console.table(results);
       //   this.db.connection.end();
       callback(this.db);
+      return results;
     });
   }
 
