@@ -1,17 +1,18 @@
+const cTable = require("console.table");
+
 class Employee {
-  constructor(firstName, lastName, roleId, managerId) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.roleId = roleId;
-    this.managerId = managerId;
+  constructor(db) {
+    this.db = db;
   }
 
-  viewAllEmployees() {
-    const query = "SELECT * FROM employee";
-    db.connection.query(query, (err, results) => {
+  viewAllEmployees(callback) {
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,   FROM employee`;
+    this.db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All employees:");
-      console.log(results);
+      console.table(results);
+      callback(this.db);
+      return results;
     });
   }
 

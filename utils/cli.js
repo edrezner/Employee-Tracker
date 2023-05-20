@@ -29,11 +29,11 @@ function start(db) {
         const department = new Department(db);
         department.viewAllDepartments(start);
       } else if (selection === "View all roles") {
-        const role = new Role();
-        role.viewAllRoles();
+        const role = new Role(db);
+        role.viewAllRoles(start);
       } else if (selection === "View all employees") {
-        const employee = new Employee();
-        employee.viewAllEmployees();
+        const employee = new Employee(db);
+        employee.viewAllEmployees(start);
       } else if (selection === "Add a department") {
         inquirer
           .prompt([

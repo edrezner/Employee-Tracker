@@ -5,9 +5,11 @@ class Role {
     this.db = db;
   }
 
-  async viewAllRoles(callback) {
-    const query = "SELECT * FROM role";
-    db.connection.query(query, (err, results) => {
+  viewAllRoles(callback) {
+    const query = `SELECT role.id, role.title, department.name AS department, role.salary 
+      FROM role 
+      JOIN department ON role.department_id = department.id`;
+    this.db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All roles:");
       console.table(results);
@@ -16,7 +18,7 @@ class Role {
     });
   }
 
-  async save() {
+  save() {
     const query =
       "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
     this.db.connection.query(
