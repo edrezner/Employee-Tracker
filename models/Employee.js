@@ -6,7 +6,13 @@ class Employee {
   }
 
   viewAllEmployees(callback) {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,   FROM employee`;
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary,
+                  CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+                  FROM employee
+                  INNER JOIN role ON employee.role_id = role.id
+                  INNER JOIN department ON role.department_id = department.id
+                  LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+                  ORDER By employee.id ASC`;
     this.db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All employees:");
@@ -16,29 +22,33 @@ class Employee {
     });
   }
 
-  save(firstName, lastName) {
+  save(firstName, lastName, roleId, managerId, callback) {
     const query =
       "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
-    db.connection.query(
+    this.db.connection.query(
       query,
-      [this.firstName, this.lastName, this.roleId, this.managerId],
+      [firstName, lastName, roleId, managerId],
       (err, result) => {
         if (err) throw err;
-        console.log(
-          `Employee ${this.firstName} ${this.lastName} saved to the database.`
-        );
+        console.log(`Employee ${firstName} ${lastName} saved to the database.`);
+        callback(this.db);
       }
     );
   }
 
   updateRole(newRoleId) {
     const query = "UPDATE employee SET role_id = ? WHERE employee_id = ?";
-    db.connection.query(query, [newRoleId, this.employeeId], (err, result) => {
-      if (err) throw err;
-      console.log(
-        `Employee ${this.firstName} ${this.lastName}'s role updated in the database.`
-      );
-    });
+    this.db.connection.query(
+      query,
+      [newRoleId, this.employeeId],
+      (err, result) => {
+        if (err) throw err;
+        console.log(
+          `Employee ${this.firstName} ${this.lastName}'s role updated in the database.`
+        );
+        callback(this.db);
+      }
+    );
   }
 }
 

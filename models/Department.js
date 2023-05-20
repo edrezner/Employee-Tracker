@@ -6,7 +6,8 @@ class Department {
   }
 
   viewAllDepartments(callback) {
-    const query = "SELECT * FROM department";
+    const query = `SELECT * FROM department
+                  ORDER BY department.id ASC`;
     this.db.connection.query(query, (err, results) => {
       if (err) throw err;
       console.log("All departments:");
