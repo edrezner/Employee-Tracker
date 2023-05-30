@@ -34,4 +34,11 @@ class Role {
   }
 }
 
+// If a function loses what you expect this to be
+// call apply
+
+// const someRole = new Role(db)
+// someRole.viewAllRoles
+// someRole.save
+
 module.exports = Role;

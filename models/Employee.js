@@ -36,19 +36,13 @@ class Employee {
     );
   }
 
-  updateRole(newRoleId) {
-    const query = "UPDATE employee SET role_id = ? WHERE employee_id = ?";
-    this.db.connection.query(
-      query,
-      [newRoleId, this.employeeId],
-      (err, result) => {
-        if (err) throw err;
-        console.log(
-          `Employee ${this.firstName} ${this.lastName}'s role updated in the database.`
-        );
-        callback(this.db);
-      }
-    );
+  updateRole(employeeId, newRoleId, callback) {
+    const query = "UPDATE employee SET role_id = ? WHERE id = ?";
+    this.db.connection.query(query, [newRoleId, employeeId], (err, result) => {
+      if (err) throw err;
+      console.log(`Employee's role updated in the database.`);
+      callback(this.db);
+    });
   }
 }
 

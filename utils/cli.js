@@ -49,8 +49,35 @@ function start(db) {
           });
       } else if (selection === "Add a role") {
         const departmentQuery = "SELECT * FROM department";
+        // fetch.then.then
+        // query("Requesting MySQL query", then)
+        /***
+         * 
+         * async function
+             const results = await db.connection.query(mySQLQuery)
+         * 
+         * fetch.then.then(
+         * 
+         *  fetch.then.then(
+         * 
+         *    fetch.then.then
+         * )
+         * 
+         *    await
+         *    await
+         *    await
+         * 
+         * )
+         * 
+         * 
+         * 
+         */
         db.connection.query(departmentQuery, (err, departments) => {
           if (err) throw err;
+
+          // console.log(departments)
+          // [row1, row2, row3]
+          // [{id:#, name:..}]
 
           inquirer
             .prompt([
@@ -75,6 +102,8 @@ function start(db) {
               },
             ])
             .then((data) => {
+              // data.departmentId <-- already the ID
+
               const { title, salary, departmentId } = data;
               const role = new Role(db);
               role.save(title, salary, departmentId, start);
@@ -134,9 +163,45 @@ function start(db) {
           });
         });
       } else if (selection === "Update an employee role") {
-        // User selects update employee role; shown list of employee names (first + last); show all possible titles from role table;
-        // UDATE employee table's role id to the new role id (that's from the chosen role title: SELECT * FROM role WHERE title = inquirer role title).
-        // WHERE id = inquirerselected employee id. SELECT * FROM employee WHERE first_name = split at first_name AND last_name = splitted at last_name
+        const employeeQuery =
+          "SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employee";
+        const roleQuery = "SELECT id, title FROM role";
+
+        db.connection.query(employeeQuery, (err, employees) => {
+          if (err) throw err;
+
+          db.connection.query(roleQuery, (err, roles) => {
+            if (err) throw err;
+
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  name: "employeeId",
+                  message: "Select the employee to update:",
+                  choices: employees.map((employee) => ({
+                    name: employee.name,
+                    value: employee.id,
+                  })),
+                },
+                {
+                  type: "list",
+                  name: "roleId",
+                  message: "Select the new role for the employee:",
+                  choices: roles.map((role) => ({
+                    name: role.title,
+                    value: role.id,
+                  })),
+                },
+              ])
+              .then((data) => {
+                const employeeId = data.employeeId;
+                const roleId = data.roleId;
+                const employee = new Employee(db);
+                employee.updateRole(employeeId, roleId, start);
+              });
+          });
+        });
       }
     });
 }
